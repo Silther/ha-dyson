@@ -31,6 +31,7 @@ class DysonDevice:
 
     def __init__(self, serial: str, credential: str):
         """Initialize the device."""
+        self.current_preset_mode = None
         self._serial = serial
         self._credential = credential
         self._mqtt_client = None
@@ -185,6 +186,14 @@ class DysonDevice:
             "time": mqtt_time(),
         }
         self._mqtt_client.publish(self._command_topic, json.dumps(payload))
+
+    @property
+    def current_preset_mode(self):
+        return self.current_preset_mode
+
+    @current_preset_mode.setter
+    def current_preset_mode(self, value):
+        self.current_preset_mode = value
 
 
 class DysonFanDevice(DysonDevice):

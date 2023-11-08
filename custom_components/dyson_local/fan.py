@@ -129,6 +129,9 @@ class DysonFanEntity(DysonEntity, FanEntity):
     @property
     def preset_mode(self) -> Optional[str]:
         """Return the current selected preset mode."""
+        if not self.device.is_on:
+            return self._device.current_preset_mode
+
         if self._device.auto_mode:
             return PRESET_MODE_AUTO
         else:
@@ -138,8 +141,10 @@ class DysonFanEntity(DysonEntity, FanEntity):
         """Configure the preset mode."""
         if preset_mode == PRESET_MODE_AUTO:
             self._device.enable_auto_mode()
+            self._device.current_preset_mode = PRESET_MODE_AUTO
         elif preset_mode == PRESET_MODE_NORMAL:
             self._device.disable_auto_mode()
+            self._device.current_preset_mode = PRESET_MODE_NORMAL
         else:
             raise NotValidPresetModeError(f"Invalid preset mode: {preset_mode}")
 
